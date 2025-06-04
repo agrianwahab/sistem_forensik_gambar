@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Unggah Gambar - {{ super() }}{% endblock %}
+
+{% block content %}
+<section class="upload-section">
+    <h2>Unggah Gambar untuk Analisis</h2>
+    <p>Pilih file gambar (JPG, PNG, JPEG) yang ingin Anda analisis.</p>
+    <form method="POST" enctype="multipart/form-data" id="uploadForm" action="{{ url_for('analysis.upload_image_page') }}">
+        <div>
+            <label for="file">Pilih File:</label>
+            <input type="file" name="file" id="file" accept=".png,.jpg,.jpeg" required>
+        </div>
+        <button type="submit" class="btn">Unggah dan Mulai Analisis</button>
+    </form>
+</section>
+{% endblock %}

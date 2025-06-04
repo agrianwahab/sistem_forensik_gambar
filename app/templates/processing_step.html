@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}{{ current_step_info.display_name }} - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="processing-page-layout">
+    <aside class="processing-steps-sidebar">
+        <h3>Tahapan Analisis ({{ analysis.current_step_number }}/{{ total_steps }})</h3>
+        <ul>
+            {% for step_item in steps_list %}
+            <li id="step-li-{{ step_item.id }}"
+                data-step-id="{{ step_item.id }}"
+                class="step-sidebar-item
+                       {% if step_item.id == current_step_info.id and (analysis.status.startswith('processing_') or analysis.status.startswith('uploaded')) %}active-step{% endif %}
+                       {% if analysis.status.startswith('completed_' + step_item.name) or (analysis.current_step_number > step_item.id and not analysis.status.startswith('failed_')) %}completed-step{% endif %}
+                       {% if analysis.status.startswith('failed_' + step_item.name) %}failed-step{% endif %}">
+                <a href="{{ url_for('analysis.process_step_page', analysis_id=analysis.id, step_id=step_item.id) }}">{{ step_item.display_name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </aside>
+
+    <section class="processing-main-content">
+        <h2>{{ current_step_info.display_name }}</h2>
+        <p>Analisis ID: {{ analysis.id }} | Gambar: {{ analysis.original_image_filename }}</p>
+
+        <div class="progress-bar-container">
+            <div id="progressBar" class="progress-bar">0%</div>
+        </div>
+        <div id="statusMessage" class="status-message">Menunggu untuk memulai...</div>
+        <div id="currentStepDisplay" style="font-weight: bold; margin-bottom: 10px;"></div>
+
+
+        <form method="POST" id="processingForm" action="{{ url_for('analysis.process_step_page', analysis_id=analysis.id, step_id=current_step_info.id) }}">
+            <input type="hidden" id="analysisId" name="analysis_id" value="{{ analysis.id }}">
+            <input type="hidden" id="currentStepId" name="current_step_id" value="{{ current_step_info.id }}">
+            <input type="hidden" id="totalSteps" name="total_steps" value="{{ total_steps }}">
+            
+            {% if current_step_info.params_needed %}
+                <h4>Parameter untuk Langkah Ini:</h4>
+                {% for param_name in current_step_info.params_needed %}
+                    <div class="form-group">
+                        <label for="{{ param_name }}">{{ param_name|capitalize }}:</label>
+                        {% if param_name == 'quality' %}
+                            <input type="number" name="{{ param_name }}" id="{{ param_name }}" value="{{ request.form[param_name] or 90 }}" min="1" max="100" class="form-control">
+                            <small>Kualitas JPEG untuk ELA (1-100)</small>
+                        {% else %}
+                            <input type="text" name="{{ param_name }}" id="{{ param_name }}" value="{{ request.form[param_name] or '' }}" class="form-control">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                 <button type="submit" class="btn" id="startStepButton">Mulai/Proses Ulang Langkah Ini</button>
+                 <hr>
+            {% endif %}
+
+            {% if not current_step_info.params_needed and not analysis.status.startswith('processing_') and not analysis.status.startswith('completed_' + current_step_info.name) %}
+                 <button type="submit" class="btn" id="startStepButton">Mulai {{ current_step_info.display_name }}</button>
+                 <hr>
+            {% endif %}
+        </form>
+        
+        {% if current_step_info.id < total_steps %}
+            <form method="GET" action="{{ url_for('analysis.process_step_page', analysis_id=analysis.id, step_id=current_step_info.id + 1) }}" style="display: inline-block;">
+                 <button type="submit" class="btn btn-secondary" id="nextStepButton"
+                    {% if not analysis.status.startswith('completed_' + current_step_info.name) %}disabled{% endif %}>
+                    Lanjut ke Langkah {{ current_step_info.id + 1 }}
+                </button>
+            </form>
+        {% else %}
+             <a href="{{ url_for('analysis.analysis_results_page', analysis_id=analysis.id) }}"
+               class="btn btn-success" id="viewResultsButton"
+               style="display: {% if analysis.status.startswith('completed_' + current_step_info.name) or analysis.status == 'completed_all' %}inline-block{% else %}none{% endif %};">
+               Lihat Hasil Akhir
+            </a>
+        {% endif %}
+
+
+        <div id="stepResultsArea" style="margin-top: 20px;">
+            {% if task_id %}
+                <p><em>Memproses... ID Tugas: {{ task_id }}</em></p>
+            {% endif %}
+
+            {% if current_step_info.name == 'ela' and analysis.ela_result_path %}
+                <h4>Hasil ELA Sementara:</h4>
+                <img src="{{ url_for('analysis.serve_analysis_result', analysis_folder=analysis.results_directory, filename=analysis.ela_result_path.split('/')[-1]) }}" alt="Hasil ELA" style="max-width: 100%; border: 1px solid #ccc;">
+            {% elif current_step_info.name == 'sift' and analysis.sift_result_path %}
+                <h4>Hasil SIFT Sementara:</h4>
+                <img src="{{ url_for('analysis.serve_analysis_result', analysis_folder=analysis.results_directory, filename=analysis.sift_result_path.split('/')[-1]) }}" alt="Hasil SIFT" style="max-width: 100%; border: 1px solid #ccc;">
+            {% endif %}
+            </div>
+    </section>
+</div>
+
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+    // Kirim task_id ke JS jika ada, untuk polling status jika SocketIO tidak cukup
+    // const taskId = "{{ task_id or '' }}";
+    // if (taskId) {
+    //     // Logika polling bisa ditambahkan di sini sebagai fallback
+    // }
+</script>
+{% endblock %}

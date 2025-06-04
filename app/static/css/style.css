@@ -1,0 +1,289 @@
+/* Tema Biru Forensik */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6; /* Putih keabuan sangat muda */
+    color: #333333; /* Abu-abu tua untuk teks utama */
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+    padding: 20px;
+}
+
+header {
+    background: #2238A4; /* Biru tua primer */
+    color: #ffffff; /* Putih untuk teks header */
+    padding-top: 30px;
+    min-height: 70px;
+    border-bottom: #5AA8D6 3px solid; /* Biru muda sebagai aksen */
+}
+
+header a {
+    color: #ffffff;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+
+header ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    float: right;
+}
+
+header li {
+    display: inline;
+    padding: 0 20px 0 20px;
+}
+
+header #branding {
+    float: left;
+}
+
+header #branding h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+header.highlight, header.current a {
+    color: #5AA8D6; /* Biru muda untuk sorotan */
+    font-weight: bold;
+}
+
+header a:hover {
+    color: #cccccc; /* Abu-abu muda untuk hover */
+}
+
+/* Tombol */
+.btn {
+    display: inline-block;
+    background: #4A5DB5; /* Biru sedang untuk tombol */
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background: #2238A4; /* Biru tua saat hover */
+}
+
+.btn-secondary {
+    background: #6c757d; /* Abu-abu untuk tombol sekunder */
+}
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+/* Formulir */
+input[type="text"], input[type="email"], input[type="password"], input[type="file"], input[type="number"], select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #cccccc; /* Batas abu-abu muda */
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Pesan Flash */
+.flash-messages {
+    list-style-type: none;
+    padding: 0;
+    margin: 1em 0;
+}
+.flash-messages li {
+    padding: 0.75em 1.25em;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+}
+.flash-messages.success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+.flash-messages.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+.flash-messages.info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+.flash-messages.warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+
+/* Halaman Unggah */
+.upload-section {
+    background: #ffffff; /* Latar belakang putih untuk area konten */
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Halaman Pemrosesan */
+.processing-steps-sidebar {
+    float: left;
+    width: 25%;
+    background: #eef2f5; /* Abu-abu sangat muda untuk sidebar */
+    padding: 15px;
+    border-radius: 5px;
+    margin-right: 2%;
+}
+.processing-steps-sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+.processing-steps-sidebar li {
+    padding: 8px 0;
+    border-bottom: 1px dotted #ccc;
+}
+.processing-steps-sidebar li.active-step {
+    font-weight: bold;
+    color: #2238A4; /* Biru tua */
+}
+.processing-steps-sidebar li.completed-step {
+    color: #28a745; /* Hijau untuk selesai */
+    text-decoration: line-through;
+}
+
+
+.processing-main-content {
+    float: left;
+    width: 73%;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.progress-bar-container {
+    width: 100%;
+    background-color: #e0e0e0; /* Abu-abu muda untuk latar progress bar */
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+.progress-bar {
+    width: 0%; /* Akan diupdate oleh JS */
+    height: 20px;
+    background-color: #4A5DB5; /* Biru sedang */
+    text-align: center;
+    line-height: 20px;
+    color: white;
+    border-radius: 5px;
+    transition: width 0.4s ease;
+}
+.status-message {
+    margin-top: 10px;
+    font-style: italic;
+    color: #555;
+}
+
+/* Hasil Analisis */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+.result-card {
+    background: #ffffff;
+    padding: 15px;
+    border: 1px solid #dddddd; /* Batas abu-abu lebih jelas */
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.result-card h3 {
+    margin-top: 0;
+    color: #2238A4; /* Biru tua */
+}
+.result-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 3px;
+    margin-top: 10px;
+}
+.result-card pre { /* Untuk output JSON metadata */
+    background-color: #f8f9fa; /* Latar abu-abu sangat muda untuk blok kode */
+    padding: 10px;
+    border-radius: 3px;
+    overflow-x: auto;
+    font-size: 0.9em;
+    border: 1px solid #eee;
+}
+
+
+/* Riwayat */
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+.history-table th,.history-table td {
+    border: 1px solid #dddddd;
+    padding: 12px;
+    text-align: left;
+}
+.history-table th {
+    background-color: #4A5DB5; /* Biru sedang untuk header tabel */
+    color: white;
+}
+.history-table tr:nth-child(even) {
+    background-color: #f9f9f9; /* Zebra striping */
+}
+.history-table tr:hover {
+    background-color: #eef2f5; /* Sorot baris saat hover */
+}
+
+/* Footer */
+footer {
+    padding: 20px;
+    margin-top: 30px;
+    color: #ffffff;
+    background-color: #333333; /* Abu-abu gelap untuk footer */
+    text-align: center;
+    clear: both; /* Membersihkan float dari konten utama */
+}
+
+/* Responsif */
+@media(max-width: 768px){
+    header #branding,
+    header ul,
+    header ul li {
+        float: none;
+        text-align: center;
+        width: 100%;
+    }
+    header {
+        padding-bottom: 20px;
+    }
+   .container {
+        width: 95%;
+    }
+   .processing-steps-sidebar,
+   .processing-main-content {
+        width: 100%;
+        float: none;
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+   .results-grid {
+        grid-template-columns: 1fr; /* Satu kolom di layar kecil */
+    }
+}

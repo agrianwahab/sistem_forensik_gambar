@@ -1,0 +1,25 @@
+Flask==2.3.3 # Atau versi terbaru yang stabil
+Flask-SQLAlchemy==3.0.5
+Flask-Migrate==4.0.5
+Flask-SocketIO==5.3.6
+Flask-WTF==1.1.1 # Untuk formulir, jika diperlukan lebih lanjut
+python-dotenv==1.0.0
+Werkzeug==2.3.7 # Pastikan kompatibel dengan Flask
+Jinja2==3.1.2
+SQLAlchemy==2.0.23
+redis==5.0.1 # Klien Python untuk Redis
+celery==5.3.6
+Pillow==10.1.0 # Untuk ELA dan manipulasi gambar dasar
+opencv-python-headless==4.8.1.78 # Untuk SIFT (headless lebih ringan untuk server)
+# opencv-contrib-python # Jika memerlukan modul SIFT dari contrib (mungkin perlu untuk versi OpenCV tertentu)
+WeasyPrint==59.0 # Untuk ekspor PDF
+python-docx==1.1.0 # Untuk ekspor DOCX
+eventlet==0.36.1 # Salah satu opsi untuk worker SocketIO, atau gevent
+# gevent==23.9.1
+# gevent-websocket==0.10.1
+
+# Catatan:
+# - Versi dapat disesuaikan. Selalu periksa versi terbaru yang stabil dan kompatibel.
+# - Untuk opencv-python, SIFT mungkin berada di modul contrib tergantung versi.
+#   Jika `cv2.SIFT_create()` tidak ditemukan, Anda mungkin perlu `opencv-contrib-python`.
+# - WeasyPrint memiliki dependensi sistem (Pango, Cairo, dll.). Pastikan terinstal.

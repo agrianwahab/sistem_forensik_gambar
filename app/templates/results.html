@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Hasil Analisis - {{ super() }}{% endblock %}
+
+{% block content %}
+<section class="results-section">
+    <h2>Hasil Analisis untuk Gambar: {{ analysis.original_image_filename }}</h2>
+    <p>ID Analisis: {{ analysis.id }} | Waktu Mulai: {{ analysis.analysis_start_time.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    
+    {% if analysis.status.startswith('failed_') %}
+        <div class="flash-messages">
+            <li class="error">Analisis gagal pada langkah: {{ analysis.status }}. Pesan: {{ analysis.error_message }}</li>
+        </div>
+    {% elif not analysis.status == 'completed_all' and not analysis.status.startswith('completed_final_review') %} 
+        <div class="flash-messages">
+            <li class="warning">Analisis mungkin belum selesai sepenuhnya. Status saat ini: {{ analysis.status }}. Beberapa hasil mungkin belum tersedia.</li>
+        </div>
+    {% endif %}
+
+    <div class="results-grid">
+        <div class="result-card">
+            <h3>Gambar Asli</h3>
+            {% if results_data.original_image_url %}
+            <img src="{{ results_data.original_image_url }}" alt="Gambar Asli">
+            {% else %}
+            <p>Gambar asli tidak tersedia.</p>
+            {% endif %}
+        </div>
+
+        <div class="result-card">
+            <h3>Analisis Metadata</h3>
+            {% if results_data.metadata %}
+                <pre>{{ results_data.metadata | tojson(indent=2) }}</pre>
+            {% else %}
+                <p>Tidak ada data metadata atau belum diproses.</p>
+            {% endif %}
+        </div>
+        
+        <div class="result-card">
+            <h3>Analisis Tingkat Kesalahan (ELA)</h3>
+            {% if results_data.ela_image_url %}
+                <img src="{{ results_data.ela_image_url }}" alt="Hasil ELA">
+            {% else %}
+                <p>Hasil ELA tidak tersedia atau belum diproses.</p>
+            {% endif %}
+        </div>
+
+        <div class="result-card">
+            <h3>Analisis Fitur SIFT</h3>
+            {% if results_data.sift_image_url %}
+                <img src="{{ results_data.sift_image_url }}" alt="Hasil SIFT">
+                {% if analysis.sift_result_path %}
+                    {% set sift_data = (analysis.sift_result_path | fromjson).keypoints_count if analysis.sift_result_path and 'keypoints_count' in (analysis.sift_result_path | fromjson) else 'N/A' %}
+                     {% endif %}
+                 <p>Path hasil SIFT: {{ analysis.sift_result_path }}</p>
+            {% else %}
+                <p>Hasil SIFT tidak tersedia atau belum diproses.</p>
+            {% endif %}
+        </div>
+
+        <div class="result-card">
+            <h3>Deteksi Copy-Move (Tesis)</h3>
+            {% if results_data.thesis_copy_move %}
+                <pre>{{ results_data.thesis_copy_move | tojson(indent=2) }}</pre>
+                {% set cm_data = results_data.thesis_copy_move | fromjson %}
+                {% if cm_data and cm_data.mask_image_path %}
+                     <img src="{{ url_for('analysis.serve_analysis_result', analysis_folder=analysis.results_directory, filename=cm_data.mask_image_path.split('/')[-1]) }}" alt="Masker Copy-Move">
+                {% endif %}
+            {% else %}
+                <p>Hasil deteksi Copy-Move tidak tersedia atau belum diproses.</p>
+            {% endif %}
+        </div>
+        
+        <div class="result-card">
+            <h3>Deteksi Splicing (Tesis)</h3>
+            {% if results_data.thesis_splicing %}
+                <pre>{{ results_data.thesis_splicing | tojson(indent=2) }}</pre>
+                 {% set sp_data = results_data.thesis_splicing | fromjson %}
+                {% if sp_data and sp_data.heatmap_image_path %}
+                     <img src="{{ url_for('analysis.serve_analysis_result', analysis_folder=analysis.results_directory, filename=sp_data.heatmap_image_path.split('/')[-1]) }}" alt="Heatmap Splicing">
+                {% endif %}
+            {% else %}
+                <p>Hasil deteksi Splicing tidak tersedia atau belum diproses.</p>
+            {% endif %}
+        </div>
+
+        <div class="result-card">
+            <h3>Analisis K-Means (Tesis)</h3>
+            {% if results_data.thesis_kmeans %}
+                <pre>{{ results_data.thesis_kmeans | tojson(indent=2) }}</pre>
+                 {% set km_data = results_data.thesis_kmeans | fromjson %}
+                {% if km_data and km_data.segmented_image_path %}
+                     <img src="{{ url_for('analysis.serve_analysis_result', analysis_folder=analysis.results_directory, filename=km_data.segmented_image_path.split('/')[-1]) }}" alt="Hasil K-Means">
+                {% endif %}
+            {% else %}
+                <p>Hasil K-Means tidak tersedia atau belum diproses.</p>
+            {% endif %}
+        </div>
+
+        <div class="result-card">
+            <h3>Lokalisasi Pemalsuan (Tesis)</h3>
+            {% if results_data.thesis_localization %}
+                <pre>{{ results_data.thesis_localization | tojson(indent=2) }}</pre>
+                 {% set loc_data = results_data.thesis_localization | fromjson %}
+                {% if loc_data and loc_data.localized_image_path %}
+                     <img src="{{ url_for('analysis.serve_analysis_result', analysis_folder=analysis.results_directory, filename=loc_data.localized_image_path.split('/')[-1]) }}" alt="Hasil Lokalisasi">
+                {% endif %}
+            {% else %}
+                <p>Hasil Lokalisasi Pemalsuan tidak tersedia atau belum diproses.</p>
+            {% endif %}
+        </div>
+
+        </div>
+
+    <div class="overall-conclusion" style="margin-top: 30px; padding: 15px; background-color: #eef2f5; border-radius: 5px;">
+        <h3>Kesimpulan Keseluruhan (Placeholder)</h3>
+        <p>{{ analysis.overall_conclusion or "Belum ada kesimpulan keseluruhan yang dihasilkan." }}</p>
+    </div>
+
+    <div class="export-options" style="margin-top: 30px;">
+        <h3>Ekspor Hasil Analisis</h3>
+        <a href="{{ url_for('analysis.export_results', analysis_id=analysis.id, format_type='pdf') }}" class="btn">Ekspor PDF</a>
+        <a href="{{ url_for('analysis.export_results', analysis_id=analysis.id, format_type='docx') }}" class="btn">Ekspor DOCX</a>
+        <a href="{{ url_for('analysis.export_results', analysis_id=analysis.id, format_type='jpg') }}" class="btn">Ekspor JPG (Ringkasan)</a>
+        </div>
+
+</section>
+{% endblock %}

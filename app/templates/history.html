@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Riwayat Analisis - {{ super() }}{% endblock %}
+
+{% block content %}
+<section class="history-section">
+    <h2>Riwayat Analisis Gambar</h2>
+    
+    {% if analyses and analyses.items %}
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>ID Analisis</th>
+                    <th>Nama File Asli</th>
+                    <th>Waktu Mulai</th>
+                    <th>Status</th>
+                    <th>Tindakan</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for analysis_item in analyses.items %}
+                <tr>
+                    <td>{{ analysis_item.id }}</td>
+                    <td>{{ analysis_item.original_image_filename }}</td>
+                    <td>{{ analysis_item.analysis_start_time.strftime('%Y-%m-%d %H:%M:%S') if analysis_item.analysis_start_time else 'N/A' }}</td>
+                    <td>
+                        <span class="status-badge status-{{ analysis_item.status.replace('processing_', '').replace('completed_', '').replace('failed_', '') }}">
+                            {{ analysis_item.status | replace('_', ' ') | capitalize }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('analysis.analysis_results_page', analysis_id=analysis_item.id) }}" class="btn btn-secondary btn-sm">Lihat Detail</a>
+                        </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="pagination" style="margin-top: 20px; text-align: center;">
+            {% if analyses.has_prev %}
+                <a href="{{ url_for('history.list_history', page=analyses.prev_num) }}" class="btn btn-sm">&laquo; Sebelumnya</a>
+            {% endif %}
+            Halaman {{ analyses.page }} dari {{ analyses.pages }}.
+            {% if analyses.has_next %}
+                <a href="{{ url_for('history.list_history', page=analyses.next_num) }}" class="btn btn-sm">Berikutnya &raquo;</a>
+            {% endif %}
+        </div>
+
+    {% else %}
+        <p>Belum ada riwayat analisis yang tersimpan.</p>
+    {% endif %}
+</section>
+{% endblock %}

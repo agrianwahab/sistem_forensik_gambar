@@ -1,0 +1,59 @@
+<div id="exportModal" class="modal" style="display:none; /* Atur dengan JS */">
+    <div class="modal-content">
+        <span class="close-button">&times;</span> <h3>Ekspor Hasil Analisis</h3>
+        <p>Pilih format laporan yang ingin Anda unduh untuk analisis ID: <span id="exportAnalysisId"></span>.</p>
+        <ul>
+            <li><a href="#" id="exportPdfLink" class="btn">Ekspor sebagai PDF</a></li>
+            <li><a href="#" id="exportDocxLink" class="btn">Ekspor sebagai DOCX</a></li>
+            <li><a href="#" id="exportJpgLink" class="btn">Ekspor sebagai JPG (Ringkasan)</a></li>
+        </ul>
+    </div>
+</div>
+
+<style>
+/* CSS Sederhana untuk Modal (tambahkan ke style.css jika ini adalah pendekatan yang Anda inginkan) */
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    display: flex; /* Defaultnya none, ubah ke flex untuk tampil */
+}
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 50%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+}
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+</style>
+
+<script>
+// JavaScript untuk mengontrol modal (tambahkan ke main.js jika ini adalah pendekatan yang Anda inginkan)
+// document.addEventListener('DOMContentLoaded', function() {
+//     const modal = document.getElementById('exportModal');
+//     const closeBtn = modal.querySelector('.close-button');
+//     // Tombol untuk membuka modal (misalnya, dari halaman hasil)
+//     // const openExportModalButton = document.getElementById('openExportModalBtn');
+
+//     // if (openExportModalButton) {
+//     //     openExportModalButton.addEventListener('click', function() {
+//     //         const analysisId = this.dataset.analysisId; // Ambil ID analisis dari tombol
+//     //         document.getElementById('exportAnalysisId').textContent = analysisId;
+//     //         // Atur link ekspor dengan ID analisis yang benar
+//     //         document.getElementById('exportPdfLink').href = `/analysis/export/${analysisId

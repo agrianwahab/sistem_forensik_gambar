@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistem Forensik Gambar{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1><a href="{{ url_for('main.index') }}">Sistem Deteksi Keaslian Gambar Forensik</a></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li class="{% if request.endpoint == 'analysis.upload_image_page' %}current{% endif %}"><a href="{{ url_for('analysis.upload_image_page') }}">Unggah</a></li>
+                    <li class="{% if request.endpoint == 'history.list_history' %}current{% endif %}"><a href="{{ url_for('history.list_history') }}">Riwayat</a></li>
+                    </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container main-content-area">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <p>&copy; {{ now.year if now else '2024' }} Sistem Forensik Gambar. Dikembangkan berdasarkan Tesis.</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts_extra %}{% endblock %}
+</body>
+</html>
